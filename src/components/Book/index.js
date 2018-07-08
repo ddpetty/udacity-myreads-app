@@ -3,9 +3,7 @@ import BookShelfChanger from "../../components/BookShelfChanger";
 
 export default class Book extends Component {
   render() {
-    const { shelf } = this.props,
-      books = this.props;
-    console.log(shelf);
+    const { changeShelf } = this.props;
     return (
       <li>
         <div className="book">
@@ -18,7 +16,10 @@ export default class Book extends Component {
                 backgroundImage: `url(${this.props.imageURL})`
               }}
             />
-            <BookShelfChanger />
+            <BookShelfChanger
+              book={this.props.book}
+              changeShelf={changeShelf}
+            />
           </div>
           <div className="book-title">{this.props.title}</div>
           <div className="book-authors">{this.props.authors}</div>

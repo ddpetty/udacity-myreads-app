@@ -2,9 +2,13 @@ import React, { Component } from "react";
 
 export default class BookShelfChanger extends Component {
   render() {
+    const { changeShelf, book } = this.props;
     return (
       <div className="book-shelf-changer">
-        <select>
+        <select
+          defaultValue={book.shelf}
+          onChange={event => changeShelf(book, event.target.value)}
+        >
           <option value="move" disabled>
             Move to...
           </option>
