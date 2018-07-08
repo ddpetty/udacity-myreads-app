@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Book from "../../components/Book";
 export default class BookShelf extends Component {
   render() {
-    const { changeShelf } = this.props;
+    const { changeShelf, shelf } = this.props;
     return (
       <div className="bookshelf">
         <h2 className="bookshelf-title">{this.props.shelf}</h2>
@@ -27,7 +27,7 @@ export default class BookShelf extends Component {
                     changeShelf={changeShelf}
                   />
                 ))
-              : "The books list is empty."}
+              : `Your ${ shelf } shelf is empty.`}
           </ol>
         </div>
       </div>

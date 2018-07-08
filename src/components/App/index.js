@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import "./App.css";
 import * as BooksAPI from "../../components/BooksAPI";
 import BookShelf from "../../components/BookShelf";
+import Book from "../../components/Book";
 
 export default class BooksApp extends Component {
   state = {
     showSearchPage: false,
-    books: []
+    books: [],
+    results: [],
+    query: ""
   };
   //When the api data response arrives, getAllBooks is run and triggers a render to update the UI.
   componentDidMount() {
@@ -38,7 +41,24 @@ export default class BooksApp extends Component {
       })
       .catch(e => console.log(`${e}: the books were not updated properly.`));
   };
-
+  //Updates input query and handles it
+  updateQuery = e => {
+    this.setState({ query: e.target.value }, this.searchBooks(e.target.value));
+  };
+  //Searches api based on query input
+  searchBooks(query) {
+    if (query && query.length > 0) {
+      BooksAPI.search(query, 20).then(results => {
+        if (results.error) {
+          results = [];
+        }
+        console.log(results);
+        this.setState({ results });
+      });
+    } else {
+      this.setState({ results: [] });
+    }
+  }
   render() {
     return (
       <div className="app">
@@ -59,11 +79,34 @@ export default class BooksApp extends Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" placeholder="Search by title or author" />
+                <input
+                  type="text"
+                  placeholder="Search by title or author"
+                  value={this.state.query}
+                  onChange={this.updateQuery}
+                />
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid" />
+              <ol className="books-grid">
+                {/* Maps out all result titles */}
+                {this.state.results.map(eachResult =>    
+                <Book
+                    books={this.props.books}
+                    book={eachResult}
+                    key={eachResult.id}
+                    title={eachResult.title}
+                    // If a book has more than one author, separate them with a comma and a space
+                    authors={
+                      eachResult.authors && eachResult.authors.length > 0
+                        ? eachResult.authors.join(", ")
+                        : ""
+                    }
+                    imageURL={eachResult.imageLinks.smallThumbnail}
+                    shelf={eachResult.shelf}
+                    changeShelf={this.changeShelf}
+                  />)}
+              </ol>
             </div>
           </div>
         ) : (
