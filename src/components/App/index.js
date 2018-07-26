@@ -30,6 +30,7 @@ export default class BooksApp extends Component {
     BooksAPI.update(book, shelf)
       .then(() => {
         book.shelf = shelf;
+        console.log(shelf);
         //Filters out old books and adds the new books to the array
         let newBooks = this.state.books
           .filter(b => {
@@ -41,22 +42,30 @@ export default class BooksApp extends Component {
       })
       .catch(e => console.log(`${e}: the books were not updated properly.`));
   };
-  //Updates input query and handles it
+  //Updates input query
   updateQuery = e => {
     this.setState({ query: e.target.value }, this.searchBooks(e.target.value));
   };
-  //Searches api based on query input
+  //Searches api based on query input and returns 20 books
   searchBooks(query) {
-    if (query && query.length > 0) {
-      BooksAPI.search(query, 20).then(results => {
-        if (results.error) {
-          results = [];
+    if (query.trim() && query.trim().length > 3) {
+      BooksAPI.search(query).then(returnedBooks => {
+        // If there is an error, clear out results
+        if (returnedBooks.error) {
+          this.setState({
+            results: []
+          });
+          console.log(returnedBooks.error);
+        } else {
+          //Map out the books
+          this.setState({
+            results: returnedBooks.map(result => {
+              this.state.books.map(book => book.id).indexOf(result.id);
+              return result;
+            })
+          });
         }
-        console.log(results);
-        this.setState({ results });
       });
-    } else {
-      this.setState({ results: [] });
     }
   }
   render() {
@@ -90,8 +99,8 @@ export default class BooksApp extends Component {
             <div className="search-books-results">
               <ol className="books-grid">
                 {/* Maps out all result titles */}
-                {this.state.results.map(eachResult =>    
-                <Book
+                {this.state.results.map(eachResult => (
+                  <Book
                     books={this.props.books}
                     book={eachResult}
                     key={eachResult.id}
@@ -102,10 +111,19 @@ export default class BooksApp extends Component {
                         ? eachResult.authors.join(", ")
                         : ""
                     }
-                    imageURL={eachResult.imageLinks.smallThumbnail}
+                    imageURL={
+                      eachResult.imageLinks ? (
+                        eachResult.imageLinks.smallThumbnail
+                      ) : (
+                        <div>
+                          <h1>Invalid Search</h1>
+                        </div>
+                      )
+                    }
                     shelf={eachResult.shelf}
                     changeShelf={this.changeShelf}
-                  />)}
+                  />
+                ))}
               </ol>
             </div>
           </div>

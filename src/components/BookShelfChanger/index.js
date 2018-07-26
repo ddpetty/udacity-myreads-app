@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 export default class BookShelfChanger extends Component {
   render() {
@@ -6,7 +7,7 @@ export default class BookShelfChanger extends Component {
     return (
       <div className="book-shelf-changer">
         <select
-          defaultValue={book.shelf}
+          value={book.shelf}
           onChange={event => changeShelf(book, event.target.value)}
         >
           <option value="move" disabled>
@@ -21,3 +22,8 @@ export default class BookShelfChanger extends Component {
     );
   }
 }
+
+BookShelfChanger.propTypes = {
+  changeShelf: PropTypes.func.isRequired,
+  book: PropTypes.object.isRequired
+};

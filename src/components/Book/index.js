@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import BookShelfChanger from "../../components/BookShelfChanger";
 
 export default class Book extends Component {
   render() {
-    const { changeShelf } = this.props;
+    const { changeShelf, title, authors, imageURL, book } = this.props;
     return (
       <li>
         <div className="book">
@@ -13,18 +14,23 @@ export default class Book extends Component {
               style={{
                 width: 128,
                 height: 193,
-                backgroundImage: `url(${this.props.imageURL})`
+                backgroundImage: `url(${imageURL})`
               }}
             />
-            <BookShelfChanger
-              book={this.props.book}
-              changeShelf={changeShelf}
-            />
+            <BookShelfChanger book={book} changeShelf={changeShelf} />
           </div>
-          <div className="book-title">{this.props.title}</div>
-          <div className="book-authors">{this.props.authors}</div>
+          <div className="book-title">{title}</div>
+          <div className="book-authors">{authors}</div>
         </div>
       </li>
     );
   }
 }
+
+Book.propTypes = {
+  changeShelf: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  authors: PropTypes.string.isRequired,
+  imageURL: PropTypes.string.isRequired,
+  book: PropTypes.object.isRequired
+};
