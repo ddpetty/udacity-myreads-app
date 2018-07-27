@@ -23,13 +23,15 @@ export default class BookShelf extends Component {
                         ? book.authors.join(", ")
                         : ""
                     }
-                    imageURL={book.imageLinks ? (
-                      book.imageLinks.smallThumbnail
-                    ) : (
-                      <div>
-                        <h1>Invalid Search</h1>
-                      </div>
-                    )}
+                    imageURL={
+                      book.imageLinks ? (
+                        book.imageLinks.smallThumbnail
+                      ) : (
+                        <div>
+                          <h1>Invalid Search</h1>
+                        </div>
+                      )
+                    }
                     shelf={book.shelf}
                     changeShelf={changeShelf}
                   />
@@ -44,5 +46,5 @@ export default class BookShelf extends Component {
 BookShelf.propTypes = {
   changeShelf: PropTypes.func.isRequired,
   books: PropTypes.array.isRequired,
-  shelf: PropTypes.string.isRequired  
+  shelf: PropTypes.string.isRequired
 };
