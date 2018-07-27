@@ -5,6 +5,7 @@ import BookShelfChanger from "../../components/BookShelfChanger";
 export default class Book extends Component {
   render() {
     const { changeShelf, title, authors, imageURL, book } = this.props;
+    console.log(typeof imageURL);
     return (
       <li>
         <div className="book">
@@ -31,6 +32,7 @@ Book.propTypes = {
   changeShelf: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   authors: PropTypes.string.isRequired,
-  imageURL: PropTypes.string.isRequired,
-  book: PropTypes.object.isRequired
+  //Books with no images return objects
+  imageURL: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  book: PropTypes.object
 };
