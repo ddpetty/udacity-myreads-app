@@ -6,7 +6,7 @@ A React app that allows users to organize and track books. This is project numbe
 ### How to get up and running
 1. Download or clone this repo.
 2. Run `npm install` in your terminal.
-3. Find the `package.json` file and look under dependencies and npm install them all.
+3. Find the `package.json` file and look under dependencies and `npm install` them all.
 4. Run `npm start` to start the server and launch the app.
 
 
