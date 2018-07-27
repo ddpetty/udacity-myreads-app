@@ -23,7 +23,13 @@ export default class BookShelf extends Component {
                         ? book.authors.join(", ")
                         : ""
                     }
-                    imageURL={book.imageLinks.smallThumbnail}
+                    imageURL={book.imageLinks ? (
+                      book.imageLinks.smallThumbnail
+                    ) : (
+                      <div>
+                        <h1>Invalid Search</h1>
+                      </div>
+                    )}
                     shelf={book.shelf}
                     changeShelf={changeShelf}
                   />
