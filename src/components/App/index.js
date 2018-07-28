@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import * as BooksAPI from "../../components/BooksAPI";
 import BookCase from "../../components/BookCase";
 import Search from "../../components/Search";
@@ -35,12 +35,9 @@ export default class BooksApp extends Component {
     BooksAPI.update(book, shelf)
       .then(() => {
         book.shelf = shelf;
-        console.log(shelf);
         //Filters out old books and adds the new books to the array
         let newBooks = this.state.books
-          .filter(b => {
-            return b.id !== book.id;
-          })
+          .filter(b => b.id !== book.id)
           .concat(book);
         this.setState({ books: newBooks });
       })
@@ -66,6 +63,15 @@ export default class BooksApp extends Component {
           });
           console.log(returnedBooks.error);
         } else {
+          //Compares books on the main page to search page and syncs shelf values
+          returnedBooks.forEach(returnedBook => {
+            returnedBook.shelf = "none";
+            this.state.books.forEach(shelvedBook => {
+              if (returnedBook.id === shelvedBook.id) {
+                returnedBook.shelf = shelvedBook.shelf;
+              }
+            });
+          });
           this.setState({
             results: returnedBooks.map(result => {
               this.state.books.map(book => book.id).indexOf(result.id);
@@ -80,30 +86,32 @@ export default class BooksApp extends Component {
   render() {
     return (
       <div className="app">
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <BookCase
-              books={this.state.books}
-              filterBooks={this.filterBooks}
-              changeShelf={this.changeShelf}
-            />
-          )}
-        />
-        <Route
-          exact
-          path="/search"
-          render={() => (
-            <Search
-              value={this.state.query}
-              results={this.state.results}
-              updateQuery={this.updateQuery}
-              books={this.state.books}
-              changeShelf={this.changeShelf}
-            />
-          )}
-        />
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <BookCase
+                books={this.state.books}
+                filterBooks={this.filterBooks}
+                changeShelf={this.changeShelf}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/search"
+            render={() => (
+              <Search
+                value={this.state.query}
+                results={this.state.results}
+                updateQuery={this.updateQuery}
+                books={this.state.books}
+                changeShelf={this.changeShelf}
+              />
+            )}
+          />
+        </Switch>
       </div>
     );
   }
